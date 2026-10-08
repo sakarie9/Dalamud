@@ -52,7 +52,14 @@ public class ReliableFileStorageTests
                                   }
                                   else
                                   {
-                                      File.Delete(tempFile);
+                                      try
+                                      {
+                                          File.Delete(tempFile);
+                                      }
+                                      catch (UnauthorizedAccessException)
+                                      {
+                                          // On Windows, a concurrent writer can briefly prevent deleting the file.
+                                      }
                                   }
                               })));
     }
