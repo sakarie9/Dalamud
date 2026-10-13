@@ -60,6 +60,10 @@ public class ReliableFileStorageTests
                                       {
                                           // On Windows, a concurrent writer can briefly prevent deleting the file.
                                       }
+                                      catch (IOException ex) when (OperatingSystem.IsWindows() && ((ex.HResult & 0xFFFF) is 32 or 33))
+                                      {
+                                          // Concurrent reads can also cause Windows sharing or lock violations during deletion.
+                                      }
                                   }
                               })));
     }
